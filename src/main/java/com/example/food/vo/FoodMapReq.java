@@ -19,7 +19,7 @@ public class FoodMapReq {
 	private Integer foodPrice;
 	
 	@JsonProperty("food_score")
-	private float foodScore;
+	private int foodScore;
 
 	public FoodMapReq() {
 
@@ -73,11 +73,11 @@ public class FoodMapReq {
 		this.foodPrice = foodPrice;
 	}
 
-	public float getFoodScore() {
+	public int getFoodScore() {
 		return foodScore;
 	}
 
-	public void setFoodScore(float foodScore) {
+	public void setFoodScore(int foodScore) {
 		this.foodScore = foodScore;
 	}
 	

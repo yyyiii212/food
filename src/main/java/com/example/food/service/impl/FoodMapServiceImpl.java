@@ -30,7 +30,7 @@ public class FoodMapServiceImpl implements FoodMapService {
 	}
 
 	@Override
-	public FoodMapRes increaseStore(String storeName, String storeFood, Integer foodPrice, float foodScore) {
+	public FoodMapRes increaseStore(String storeName, String storeFood, Integer foodPrice, int foodScore) {
 		Store store = new Store(storeName, storeFood, foodPrice, foodScore);
 		FoodNameId foodnameId = new FoodNameId(storeName, storeFood);
 		Optional<Store> storeOp = storeDao.findById(foodnameId);
@@ -64,7 +64,7 @@ public class FoodMapServiceImpl implements FoodMapService {
 	}
 
 	@Override
-	public Store updateStore(String storeName, String storeFood, Integer foodPrice, float foodScore) {
+	public Store updateStore(String storeName, String storeFood, Integer foodPrice, int foodScore) {
 		FoodNameId foodnameId = new FoodNameId(storeName, storeFood);
 		Optional<Store> storeOp = storeDao.findById(foodnameId);
 		Store store = storeOp.get();
@@ -143,7 +143,7 @@ public class FoodMapServiceImpl implements FoodMapService {
 	}
 
 	@Override
-	public FoodMapRes getScoreAndFoodScore(float score, float foodScore) {
+	public FoodMapRes getScoreAndFoodScore(float score, int foodScore) {
 		List<FoodMap> foodMapList = foodMapDao.findByScoreGreaterThanEqualOrderByScoreDesc(score);
 		List<Store> store = new ArrayList<>();
 		for (FoodMap foodmap : foodMapList) {

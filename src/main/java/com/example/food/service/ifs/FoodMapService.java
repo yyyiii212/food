@@ -7,11 +7,11 @@ import com.example.food.vo.FoodMapRes;
 public interface FoodMapService {
 	public FoodMap increaseFoodMap(String city,String name);
 	
-	public FoodMapRes increaseStore(String storeName,String storeFood,Integer foodPrice,float foodScore);
+	public FoodMapRes increaseStore(String storeName,String storeFood,Integer foodPrice,int foodScore);
 	
 	public FoodMap updateFoodMap(String name,String city); 
 	
-	public Store updateStore(String storeName,String storeFood,Integer foodPrice,float foodScore); 
+	public Store updateStore(String storeName,String storeFood,Integer foodPrice,int foodScore); 
 	
 	public FoodMapRes deleteFoodMap(String name);
 	
@@ -21,5 +21,5 @@ public interface FoodMapService {
 	
 	public FoodMapRes getStoreScore(float score);
 	
-	public FoodMapRes getScoreAndFoodScore(float score,float foodScore); 
+	public FoodMapRes getScoreAndFoodScore(float score,int foodScore); 
 }
