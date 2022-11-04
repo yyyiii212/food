@@ -1,15 +1,25 @@
 package com.example.food.vo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class FoodMapReq {
 	private String city;
 
 	private String name;
-
-	private String food;
-
-	private Integer price;
-
-	private Integer score;
+	
+	private float score;
+	
+	@JsonProperty("store_name")
+	private String storeName;
+	
+	@JsonProperty("store_food")
+	private String storeFood;
+	
+	@JsonProperty("food_price")
+	private Integer foodPrice;
+	
+	@JsonProperty("food_score")
+	private float foodScore;
 
 	public FoodMapReq() {
 
@@ -31,28 +41,44 @@ public class FoodMapReq {
 		this.name = name;
 	}
 
-	public String getFood() {
-		return food;
-	}
-
-	public void setFood(String food) {
-		this.food = food;
-	}
-
-	public Integer getPrice() {
-		return price;
-	}
-
-	public void setPrice(Integer price) {
-		this.price = price;
-	}
-
-	public Integer getScore() {
+	public float getScore() {
 		return score;
 	}
 
-	public void setScore(Integer score) {
+	public void setScore(float score) {
 		this.score = score;
 	}
+	
+	public String getStoreName() {
+		return storeName;
+	}
 
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
+	}
+
+	public String getStoreFood() {
+		return storeFood;
+	}
+
+	public void setStoreFood(String storeFood) {
+		this.storeFood = storeFood;
+	}
+
+	public Integer getFoodPrice() {
+		return foodPrice;
+	}
+
+	public void setFoodPrice(Integer foodPrice) {
+		this.foodPrice = foodPrice;
+	}
+
+	public float getFoodScore() {
+		return foodScore;
+	}
+
+	public void setFoodScore(float foodScore) {
+		this.foodScore = foodScore;
+	}
+	
 }

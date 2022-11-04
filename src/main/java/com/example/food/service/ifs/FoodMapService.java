@@ -1,25 +1,25 @@
 package com.example.food.service.ifs;
 
-import java.util.List;
-
 import com.example.food.entity.FoodMap;
 import com.example.food.entity.Store;
 import com.example.food.vo.FoodMapRes;
 
 public interface FoodMapService {
-	public FoodMap increaseCity(String city,String name,String food,Integer price,Integer score);
+	public FoodMap increaseFoodMap(String city,String name);
 	
-	public Store increaseStore(String storeName,String storeFood,Integer price,Integer storeScore);
+	public FoodMapRes increaseStore(String storeName,String storeFood,Integer foodPrice,float foodScore);
 	
-	public FoodMap updateStore(String name,String food,Integer price,Integer score); 
+	public FoodMap updateFoodMap(String name,String city); 
 	
-	public FoodMapRes deleteStore(String name,String food);
+	public Store updateStore(String storeName,String storeFood,Integer foodPrice,float foodScore); 
 	
-	public FoodMapRes getCity(String city,List<String> roleList);
+	public FoodMapRes deleteFoodMap(String name);
 	
-	public List<FoodMap> getCityAndScore(String name,Integer score);
+	public FoodMapRes deleteStore(String storeName,String storeFood);
 	
-	public FoodMap getStoreName(String name);
+	public FoodMapRes getCity(String city);
 	
-	public FoodMap getStoreAndScore(String name,Integer score); 
+	public FoodMapRes getStoreScore(float score);
+	
+	public FoodMapRes getScoreAndFoodScore(float score,float foodScore); 
 }

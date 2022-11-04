@@ -3,12 +3,10 @@ package com.example.food.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "foodmap")
-@IdClass(value = FoodNameId.class)
 public class FoodMap {
 
 	@Column(name = "city")
@@ -18,26 +16,17 @@ public class FoodMap {
 	@Column(name = "name")
 	private String name;
 
-	@Id
-	@Column(name = "food")
-	private String food;
-
-	@Column(name = "price")
-	private Integer price;
-
 	@Column(name = "score")
-	private Integer score;
+	private float score;
+	
 
 	public FoodMap() {
 
 	}
 
-	public FoodMap(String city, String name, String food,Integer price, Integer score) {
+	public FoodMap(String city, String name) {
 		this.city = city;
-		this.food = food;
 		this.name = name;
-		this.price = price;
-		this.score = score;
 	}
 
 	public String getCity() {
@@ -56,28 +45,13 @@ public class FoodMap {
 		this.name = name;
 	}
 
-	public String getFood() {
-		return food;
-	}
-
-	public void setFood(String food) {
-		this.food = food;
-	}
-
-	public Integer getPrice() {
-		return price;
-	}
-
-	public void setPrice(Integer price) {
-		this.price = price;
-	}
-
-	public Integer getScore() {
+	public float getScore() {
 		return score;
 	}
 
-	public void setScore(Integer score) {
+	public void setScore(float score) {
 		this.score = score;
 	}
+	
 
 }

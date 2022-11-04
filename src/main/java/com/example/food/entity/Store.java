@@ -3,10 +3,12 @@ package com.example.food.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "store")
+@IdClass(value = FoodNameId.class)
 public class Store {
 	@Id
 	@Column(name = "store_name")
@@ -16,21 +18,21 @@ public class Store {
 	@Column(name = "store_food")
 	private String storeFood;
 
-	@Column(name = "price")
-	private Integer price;
+	@Column(name = "food_price")
+	private Integer foodPrice;
 
-	@Column(name = "store_score")
-	private Integer storeScore;
+	@Column(name = "food_score")
+	private float foodScore;
 	
 	public Store() {
 		
 	}
 	
-	public Store(String storeName,String storeFood,Integer price,Integer storeScore) {
+	public Store(String storeName,String storeFood,Integer foodPrice,float foodScore) {
 		this.storeFood = storeFood;
 		this.storeName = storeName;
-		this.price = price;
-		this.storeScore = storeScore;
+		this.foodPrice = foodPrice;
+		this.foodScore = foodScore;
 	}
 
 	public String getStoreName() {
@@ -49,20 +51,20 @@ public class Store {
 		this.storeFood = storeFood;
 	}
 
-	public Integer getPrice() {
-		return price;
+	public Integer getFoodPrice() {
+		return foodPrice;
 	}
 
-	public void setPrice(Integer price) {
-		this.price = price;
+	public void setFoodPrice(Integer foodPrice) {
+		this.foodPrice = foodPrice;
 	}
 
-	public Integer getStoreScore() {
-		return storeScore;
+	public float getFoodScore() {
+		return foodScore;
 	}
 
-	public void setStoreScore(Integer storeScore) {
-		this.storeScore = storeScore;
+	public void setFoodScore(float foodScore) {
+		this.foodScore = foodScore;
 	}
 	
 }

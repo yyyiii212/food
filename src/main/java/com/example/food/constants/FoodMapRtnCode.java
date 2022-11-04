@@ -8,8 +8,8 @@ public enum FoodMapRtnCode {
 	
 	STORE_NAME_REQUIRED("400","Store_Name cannot be null or empty!!"),
 	STORE_FOOD_REQUIRED("400","Food cannot be null or empty!!"),
-	PRICE_REQUIRED("400","Price cannot be null or empty or negative number!!"),
-	STORE_SCORE_REQUIRED("400","Store_Score cannot be null or empty or negative number!!");
+	FOOD_PRICE_REQUIRED("400","Price cannot be null or empty or negative number!!"),
+	FOOD_SCORE_REQUIRED("400","Store_Score cannot be null or empty or negative number!!");
 	
 	private String code;
 	

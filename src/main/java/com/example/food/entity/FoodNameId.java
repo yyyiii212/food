@@ -4,33 +4,32 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class FoodNameId implements Serializable{
-	private String name;
+	private String storeName;
 	
-	private String food;
+	private String storeFood;
 	
 	public FoodNameId() {
 		
 	}
 	
-	public FoodNameId(String name,String food) {
-		this.food = food;
-		this.name = name;
+	public FoodNameId(String storeName,String storeFood) {
+		this.storeFood = storeFood;
+		this.storeName = storeName;
 	}
 
-	public String getName() {
-		return name;
+	public String getStoreName() {
+		return storeName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
 	}
 
-	public String getFood() {
-		return food;
+	public String getStoreFood() {
+		return storeFood;
 	}
 
-	public void setFood(String food) {
-		this.food = food;
+	public void setStoreFood(String storeFood) {
+		this.storeFood = storeFood;
 	}
-	
 }
