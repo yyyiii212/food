@@ -32,18 +32,15 @@ public class FoodMapController {
 			return new FoodMapRes(FoodMapRtnCode.CITY_REQUIRED.getMessage());
 		} else if (!StringUtils.hasText(req.getName())) {
 			return new FoodMapRes(FoodMapRtnCode.NAME_REQUIRED.getMessage());
-		} else if ( req.getScore() <= 0) {
-			return new FoodMapRes(FoodMapRtnCode.SCORE_REQUIRED.getMessage());
 		}
 		return null;
 	}
 
 	@PostMapping(value = "/api/increaseFoodMap")
 	public FoodMapRes increaseFoodMap(@RequestBody FoodMapReq req) {
-		if (!StringUtils.hasText(req.getCity())) {
-			return new FoodMapRes(FoodMapRtnCode.CITY_REQUIRED.getMessage());
-		} else if (!StringUtils.hasText(req.getName())) {
-			return new FoodMapRes(FoodMapRtnCode.NAME_REQUIRED.getMessage());
+		FoodMapRes check = checkParamFoodMap(req);
+		if (check != null) {
+			return check;
 		}
 		FoodMap foodMap = foodMapService.increaseFoodMap(req.getCity(), req.getName());
 		return new FoodMapRes(foodMap, FoodMapRtnCode.SUCCESSFUL.getMessage());
@@ -56,7 +53,7 @@ public class FoodMapController {
 			return check;
 		}else if (req.getFoodPrice() == null || req.getFoodPrice() <= 0) {
 			return new FoodMapRes(FoodMapRtnCode.FOOD_PRICE_REQUIRED.getMessage());
-		}else if (req.getFoodScore() <= 0) {
+		}else if (req.getFoodScore() <= 0 || req.getFoodScore() > 6) {
 			return new FoodMapRes(FoodMapRtnCode.FOOD_SCORE_REQUIRED.getMessage());
 		}
 		FoodMapRes res = foodMapService.increaseStore(req.getStoreName(), req.getStoreFood(), req.getFoodPrice(),
@@ -82,7 +79,7 @@ public class FoodMapController {
 		}
 		if (req.getFoodPrice() == null || req.getFoodPrice() <= 0) {
 			return new FoodMapRes(FoodMapRtnCode.FOOD_PRICE_REQUIRED.getMessage());
-		} else if (req.getFoodScore() <= 0) {
+		} else if (req.getFoodScore() <= 0 || req.getFoodScore() > 6) {
 			return new FoodMapRes(FoodMapRtnCode.FOOD_SCORE_REQUIRED.getMessage());
 		}
 		Store store = foodMapService.updateStore(req.getStoreName(), req.getStoreFood(), req.getFoodPrice(),
@@ -121,8 +118,8 @@ public class FoodMapController {
 	@PostMapping(value = "/api/getStoreScore")
 	public FoodMapRes getStoreScore(@RequestBody FoodMapReq req) {
 		FoodMapRes res = foodMapService.getStoreScore(req.getScore());
-		if (req.getScore() <= 0) {
-			return new FoodMapRes(FoodMapRtnCode.FOOD_SCORE_REQUIRED.getMessage());
+		if (req.getScore() <= 0 || req.getFoodScore() > 6) {
+			return new FoodMapRes(FoodMapRtnCode.SCORE_REQUIRED.getMessage());
 		}
 		return res;
 	}
@@ -130,9 +127,9 @@ public class FoodMapController {
 	@PostMapping(value = "/api/getScoreAndFoodScore")
 	public FoodMapRes getScoreAndFoodScore(@RequestBody FoodMapReq req) {
 		FoodMapRes res = foodMapService.getScoreAndFoodScore(req.getScore(),req.getFoodScore());
-		if (req.getScore() <= 0) {
-			return new FoodMapRes(FoodMapRtnCode.FOOD_SCORE_REQUIRED.getMessage());
-		}else if (req.getFoodScore() <= 0) {
+		if (req.getScore() <= 0 || req.getFoodScore() > 6) {
+			return new FoodMapRes(FoodMapRtnCode.SCORE_REQUIRED.getMessage());
+		}else if (req.getFoodScore() <= 0 || req.getFoodScore() > 6) {
 			return new FoodMapRes(FoodMapRtnCode.FOOD_SCORE_REQUIRED.getMessage());
 		}
 		return res;

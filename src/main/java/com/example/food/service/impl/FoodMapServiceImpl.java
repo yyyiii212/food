@@ -26,6 +26,7 @@ public class FoodMapServiceImpl implements FoodMapService {
 	@Override
 	public FoodMap increaseFoodMap(String city, String name) {
 		FoodMap foodMap = new FoodMap(city, name);
+		foodMap.setScore(0);
 		return foodMapDao.save(foodMap);
 	}
 
