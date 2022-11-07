@@ -22,13 +22,13 @@ public class Store {
 	private Integer foodPrice;
 
 	@Column(name = "food_score")
-	private float foodScore;
+	private int foodScore;
 	
 	public Store() {
 		
 	}
 	
-	public Store(String storeName,String storeFood,Integer foodPrice,float foodScore) {
+	public Store(String storeName,String storeFood,Integer foodPrice,int foodScore) {
 		this.storeFood = storeFood;
 		this.storeName = storeName;
 		this.foodPrice = foodPrice;
@@ -59,11 +59,11 @@ public class Store {
 		this.foodPrice = foodPrice;
 	}
 
-	public float getFoodScore() {
+	public int getFoodScore() {
 		return foodScore;
 	}
 
-	public void setFoodScore(float foodScore) {
+	public void setFoodScore(int foodScore) {
 		this.foodScore = foodScore;
 	}
 	

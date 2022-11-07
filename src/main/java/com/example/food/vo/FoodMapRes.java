@@ -22,6 +22,8 @@ public class FoodMapRes {
 
 	private FoodMapRes res;
 	
+	private List<String> str;
+	
 	public FoodMapRes() {
 		
 	}
@@ -30,8 +32,8 @@ public class FoodMapRes {
 		this.message = message;
 	}
 	
-	public FoodMapRes(List<FoodMap> foodMap) {
-		this.foodMap = foodMap;
+	public FoodMapRes(List<String> str) {
+		this.str = str;
 	}
 	
 	public FoodMapRes(FoodMap foodmap,String message) {
@@ -39,10 +41,6 @@ public class FoodMapRes {
 		this.message = message;
 	}
 	
-	public FoodMapRes(List<FoodMap> foodMap,String message) {
-		this.foodMap = foodMap;
-		this.message = message;
-	}
 	
 	public FoodMapRes(List<FoodMap> foodMap,List<Store> storeList,String message) {
 		this.foodMap = foodMap;
@@ -55,6 +53,10 @@ public class FoodMapRes {
 		this.message = message;
 	}
 	
+	public FoodMapRes(FoodMapRes res) {
+		this.res = res;
+	}
+	
 	public FoodMapRes(Store store ,String message) {
 		this.store = store;
 		this.message = message;
@@ -62,6 +64,12 @@ public class FoodMapRes {
 	
 	public FoodMapRes(Store store) {
 		this.store = store;
+	}
+
+
+	public FoodMapRes(List<String> str, String message) {
+		this.str = str;
+		this.message = message;
 	}
 
 	public FoodMap getFoodmap() {
@@ -118,6 +126,14 @@ public class FoodMapRes {
 
 	public void setRes(FoodMapRes res) {
 		this.res = res;
+	}
+
+	public List<String> getStr() {
+		return str;
+	}
+
+	public void setStr(List<String> str) {
+		this.str = str;
 	}
 	
 }

@@ -11,10 +11,10 @@ import com.example.food.entity.FoodMap;
 public interface FoodMapDao extends JpaRepository<FoodMap,String>{
 	public FoodMap findByCity(String city);
 
-	public List<FoodMap> findAllByCity(String city);
-	
-	public List<FoodMap> findTop3ByScoreGreaterThanEqualOrderByScoreDesc(float score);
+	public List<FoodMap> findAllByCityOrderByScoreDesc(String city);
 	
 	public List<FoodMap> findByScoreGreaterThanEqualOrderByScoreDesc(float score);
+
+	public List<FoodMap> findByScoreGreaterThanEqualOrderByScoreDesc(double score);
 
 }

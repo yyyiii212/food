@@ -14,9 +14,11 @@ public interface StoreDao extends JpaRepository<Store,FoodNameId>{
 	
 	public List<Store> findAllByStoreName(String storeName);
 	
+	public List<Store> findAllByStoreNameOrderByFoodScoreDesc(String storeName);
+	
 	public List<Store> findByStoreName(String storeName);
 	
-	public List<Store> findByStoreNameAndFoodScoreGreaterThanEqualOrderByFoodScoreDesc(String storeName,float foodScore);
+	public List<Store> findByStoreNameAndFoodScoreGreaterThanEqualOrderByFoodScoreDesc(String storeName,int foodScore);
 		
 	public List<Store> findByStoreNameAndFoodScoreGreaterThanEqual(String storeName,float foodScore);
 	

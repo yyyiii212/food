@@ -42,8 +42,8 @@ public class FoodMapController {
 		if (check != null) {
 			return check;
 		}
-		FoodMap foodMap = foodMapService.increaseFoodMap(req.getCity(), req.getName());
-		return new FoodMapRes(foodMap, FoodMapRtnCode.SUCCESSFUL.getMessage());
+		FoodMapRes res = foodMapService.increaseFoodMap(req.getCity(), req.getName());
+		return new FoodMapRes(res);
 	}
 
 	@PostMapping(value = "/api/increaseStore")
@@ -51,14 +51,14 @@ public class FoodMapController {
 		FoodMapRes check = checkParam(req);
 		if (check != null) {
 			return check;
-		}else if (req.getFoodPrice() == null || req.getFoodPrice() <= 0) {
+		} else if (req.getFoodPrice() == null || req.getFoodPrice() <= 0) {
 			return new FoodMapRes(FoodMapRtnCode.FOOD_PRICE_REQUIRED.getMessage());
-		}else if (req.getFoodScore() <= 0 || req.getFoodScore() > 6) {
+		} else if (req.getFoodScore() <= 0 || req.getFoodScore() >= 6) {
 			return new FoodMapRes(FoodMapRtnCode.FOOD_SCORE_REQUIRED.getMessage());
 		}
 		FoodMapRes res = foodMapService.increaseStore(req.getStoreName(), req.getStoreFood(), req.getFoodPrice(),
 				req.getFoodScore());
-		return new FoodMapRes(res,FoodMapRtnCode.SUCCESSFUL.getMessage());
+		return new FoodMapRes(res);
 	}
 
 	@PostMapping(value = "/api/updateFoodMap")
@@ -67,7 +67,10 @@ public class FoodMapController {
 		if (check != null) {
 			return check;
 		}
-		FoodMap foodMap = foodMapService.increaseFoodMap(req.getCity(), req.getName());
+		FoodMap foodMap = foodMapService.updateFoodMap(req.getName(),req.getCity());
+		if(foodMap == null) {
+			return new FoodMapRes(FoodMapRtnCode.ERROR.getMessage());
+		}
 		return new FoodMapRes(foodMap, FoodMapRtnCode.SUCCESSFUL.getMessage());
 	}
 
@@ -84,6 +87,9 @@ public class FoodMapController {
 		}
 		Store store = foodMapService.updateStore(req.getStoreName(), req.getStoreFood(), req.getFoodPrice(),
 				req.getFoodScore());
+		if(store == null) {
+			return new FoodMapRes(FoodMapRtnCode.ERROR.getMessage());
+		}
 		return new FoodMapRes(store, FoodMapRtnCode.SUCCESSFUL.getMessage());
 	}
 
@@ -93,7 +99,10 @@ public class FoodMapController {
 			return new FoodMapRes(FoodMapRtnCode.NAME_REQUIRED.getMessage());
 		}
 		FoodMapRes res = foodMapService.deleteFoodMap(req.getName());
-		return new FoodMapRes(res,FoodMapRtnCode.SUCCESSFUL.getMessage());
+		if(res == null) {
+			return new FoodMapRes(FoodMapRtnCode.ERROR.getMessage());
+		}
+		return new FoodMapRes(res, FoodMapRtnCode.SUCCESSFUL.getMessage());
 	}
 
 	@PostMapping(value = "/api/deleteStore")
@@ -102,34 +111,39 @@ public class FoodMapController {
 		if (check != null) {
 			return check;
 		}
-		FoodMapRes res =foodMapService.deleteStore(req.getStoreName(), req.getStoreFood());
-		return new FoodMapRes(res,FoodMapRtnCode.SUCCESSFUL.getMessage());
+		FoodMapRes res = foodMapService.deleteStore(req.getStoreName(), req.getStoreFood());
+		if(res == null) {
+			return new FoodMapRes(FoodMapRtnCode.ERROR.getMessage());
+		}
+		return new FoodMapRes(res, FoodMapRtnCode.SUCCESSFUL.getMessage());
 	}
 
-	@PostMapping(value = "/api/getCity")
+	@PostMapping(value = "/api/serchCity")
 	public FoodMapRes getCity(@RequestBody FoodMapReq req) {
-		FoodMapRes res = foodMapService.getCity(req.getCity());
+		FoodMapRes res = foodMapService.getCity(req.getCity(),req.getSerch());
 		if (!StringUtils.hasText(req.getCity())) {
 			return new FoodMapRes(FoodMapRtnCode.CITY_REQUIRED.getMessage());
+		}else if (req.getSerch() < 0) {
+			return new FoodMapRes(FoodMapRtnCode.SERCH_REQUIRED.getMessage());
 		}
 		return res;
 	}
 
-	@PostMapping(value = "/api/getStoreScore")
+	@PostMapping(value = "/api/serchStoreScore")
 	public FoodMapRes getStoreScore(@RequestBody FoodMapReq req) {
 		FoodMapRes res = foodMapService.getStoreScore(req.getScore());
-		if (req.getScore() <= 0 || req.getFoodScore() > 6) {
+		 if (req.getScore() == null || req.getScore() <= 0 || req.getScore() >= 6) {
 			return new FoodMapRes(FoodMapRtnCode.SCORE_REQUIRED.getMessage());
 		}
 		return res;
 	}
-	
-	@PostMapping(value = "/api/getScoreAndFoodScore")
+
+	@PostMapping(value = "/api/serchStoreScoreAndFoodScore")
 	public FoodMapRes getScoreAndFoodScore(@RequestBody FoodMapReq req) {
-		FoodMapRes res = foodMapService.getScoreAndFoodScore(req.getScore(),req.getFoodScore());
-		if (req.getScore() <= 0 || req.getFoodScore() > 6) {
+		FoodMapRes res = foodMapService.getScoreAndFoodScore(req.getScore(), req.getFoodScore());
+		if (req.getScore() == null || req.getScore() <= 0 || req.getScore() >= 6) {
 			return new FoodMapRes(FoodMapRtnCode.SCORE_REQUIRED.getMessage());
-		}else if (req.getFoodScore() <= 0 || req.getFoodScore() > 6) {
+		} else if (req.getFoodScore() == null || req.getFoodScore() <= 0 || req.getFoodScore() >= 6) {
 			return new FoodMapRes(FoodMapRtnCode.FOOD_SCORE_REQUIRED.getMessage());
 		}
 		return res;

@@ -3,11 +3,15 @@ package com.example.food.vo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class FoodMapReq {
+	@JsonProperty("city")
 	private String city;
-
+	
+	@JsonProperty("name")
 	private String name;
 	
-	private float score;
+	private Integer score;
+	
+	private int serch;
 	
 	@JsonProperty("store_name")
 	private String storeName;
@@ -19,7 +23,7 @@ public class FoodMapReq {
 	private Integer foodPrice;
 	
 	@JsonProperty("food_score")
-	private int foodScore;
+	private Integer foodScore;
 
 	public FoodMapReq() {
 
@@ -41,11 +45,11 @@ public class FoodMapReq {
 		this.name = name;
 	}
 
-	public float getScore() {
+	public Integer getScore() {
 		return score;
 	}
 
-	public void setScore(float score) {
+	public void setScore(Integer score) {
 		this.score = score;
 	}
 	
@@ -73,12 +77,21 @@ public class FoodMapReq {
 		this.foodPrice = foodPrice;
 	}
 
-	public int getFoodScore() {
+	public Integer getFoodScore() {
 		return foodScore;
 	}
 
-	public void setFoodScore(int foodScore) {
+	public void setFoodScore(Integer foodScore) {
 		this.foodScore = foodScore;
 	}
+
+	public int getSerch() {
+		return serch;
+	}
+
+	public void setSerch(int serch) {
+		this.serch = serch;
+	}
+	
 	
 }

@@ -5,7 +5,7 @@ import com.example.food.entity.Store;
 import com.example.food.vo.FoodMapRes;
 
 public interface FoodMapService {
-	public FoodMap increaseFoodMap(String city,String name);
+	public FoodMapRes increaseFoodMap(String city,String name);
 	
 	public FoodMapRes increaseStore(String storeName,String storeFood,Integer foodPrice,int foodScore);
 	
@@ -17,9 +17,10 @@ public interface FoodMapService {
 	
 	public FoodMapRes deleteStore(String storeName,String storeFood);
 	
-	public FoodMapRes getCity(String city);
+	public FoodMapRes getCity(String city, int serch);
 	
-	public FoodMapRes getStoreScore(float score);
+	public FoodMapRes getStoreScore(Integer score);
 	
-	public FoodMapRes getScoreAndFoodScore(float score,int foodScore); 
+	public FoodMapRes getScoreAndFoodScore(Integer score,Integer foodScore);
+
 }

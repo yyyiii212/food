@@ -24,10 +24,15 @@ public class FoodMapServiceImpl implements FoodMapService {
 	private StoreDao storeDao;
 
 	@Override
-	public FoodMap increaseFoodMap(String city, String name) {
+	public FoodMapRes increaseFoodMap(String city, String name) {
 		FoodMap foodMap = new FoodMap(city, name);
 		foodMap.setScore(0);
-		return foodMapDao.save(foodMap);
+		Optional<FoodMap> foodMapOp = foodMapDao.findById(name);
+		if (foodMapOp.isPresent()) {
+			return new FoodMapRes(foodMap, FoodMapRtnCode.NAME_EXISTED.getMessage());
+		}
+		foodMapDao.save(foodMap);
+		return new FoodMapRes(foodMap, FoodMapRtnCode.SUCCESSFUL.getMessage());
 	}
 
 	@Override
@@ -36,7 +41,7 @@ public class FoodMapServiceImpl implements FoodMapService {
 		FoodNameId foodnameId = new FoodNameId(storeName, storeFood);
 		Optional<Store> storeOp = storeDao.findById(foodnameId);
 		if (storeOp.isPresent()) {
-			return new FoodMapRes("This FoodName is existed!");
+			return new FoodMapRes(FoodMapRtnCode.STORE_EXISTED.getMessage());
 		}
 		storeDao.save(store);
 		float score = 0;
@@ -44,47 +49,57 @@ public class FoodMapServiceImpl implements FoodMapService {
 		Optional<FoodMap> foodmapOp = foodMapDao.findById(name);
 		List<Store> storeList = storeDao.findAllByStoreName(storeName);
 		for (Store item : storeList) {
-			score += item.getFoodScore();
+			score += item.getFoodScore() / storeList.size();
+			String str = String.valueOf(score);
+			String newstr = str.substring(0, 3);
+			float saveScore = Float.parseFloat(newstr);
+			FoodMap foodmap = foodmapOp.get();
+			foodmap.setScore(saveScore);
+			foodmap = foodMapDao.save(foodmap);
 		}
-		score = score / storeList.size();
-		FoodMap foodmap = foodmapOp.get();
-		foodmap.setScore(score);
-		foodmap = foodMapDao.save(foodmap);
-		return new FoodMapRes(store);
+		return new FoodMapRes(store, FoodMapRtnCode.SUCCESSFUL.getMessage());
 	}
 
 	@Override
 	public FoodMap updateFoodMap(String name, String city) {
 		Optional<FoodMap> foodMapOp = foodMapDao.findById(name);
-		FoodMap foodMap = foodMapOp.get();
-		if (foodMapOp.isPresent()) {
-			foodMap.setCity(city);
-			foodMapDao.save(foodMap);
+		if (!foodMapOp.isPresent()) {
+			return null;
 		}
+		FoodMap foodMap = foodMapOp.get();
+		foodMap.setCity(city);
+		foodMapDao.save(foodMap);
 		return foodMap;
 	}
 
 	@Override
 	public Store updateStore(String storeName, String storeFood, Integer foodPrice, int foodScore) {
 		FoodNameId foodnameId = new FoodNameId(storeName, storeFood);
-		Optional<Store> storeOp = storeDao.findById(foodnameId);
-		Store store = storeOp.get();
-		if (storeOp.isPresent()) {
-			store.setFoodPrice(foodPrice);
-			store.setFoodScore(foodScore);
-			storeDao.save(store);
+		if (foodnameId.getStoreFood().isEmpty() || foodnameId.getStoreFood() == null
+				|| foodnameId.getStoreName().isEmpty() || foodnameId.getStoreName() == null) {
+			return null;
 		}
+		Optional<Store> storeOp = storeDao.findById(foodnameId);
+		if (!storeOp.isPresent()) {
+			return null;
+		}
+		Store store = storeOp.get();
+		store.setFoodPrice(foodPrice);
+		store.setFoodScore(foodScore);
+		storeDao.save(store);
 		float score = 0;
 		String name = storeName;
 		Optional<FoodMap> foodmapOp = foodMapDao.findById(name);
 		List<Store> storeList = storeDao.findAllByStoreName(storeName);
 		for (Store item : storeList) {
-			score += item.getFoodScore();
+			score += item.getFoodScore() / storeList.size();
+			String str = String.valueOf(score);
+			String newstr = str.substring(0, 3);
+			float saveScore = Float.parseFloat(newstr);
+			FoodMap foodmap = foodmapOp.get();
+			foodmap.setScore(saveScore);
+			foodmap = foodMapDao.save(foodmap);
 		}
-		score = (score / storeList.size());
-		FoodMap foodmap = foodmapOp.get();
-		foodmap.setScore(score);
-		foodmap = foodMapDao.save(foodmap);
 		return store;
 
 	}
@@ -95,6 +110,8 @@ public class FoodMapServiceImpl implements FoodMapService {
 		Optional<FoodMap> foodMapOp = foodMapDao.findById(name);
 		if (foodMapOp.isPresent()) {
 			foodMapDao.deleteById(name);
+		}else {
+			return null;
 		}
 		return new FoodMapRes(FoodMapRtnCode.SUCCESSFUL.getMessage());
 	}
@@ -105,53 +122,84 @@ public class FoodMapServiceImpl implements FoodMapService {
 		Optional<Store> storeOp = storeDao.findById(foodnameId);
 		if (storeOp.isPresent()) {
 			storeDao.deleteById(foodnameId);
+		}else {
+			return null;
 		}
 		float score = 0;
 		String name = storeName;
 		Optional<FoodMap> foodmapOp = foodMapDao.findById(name);
-		List<Store> storeList = storeDao.findAllByStoreName(storeName);
+		List<Store> storeList = storeDao.findAllByStoreNameOrderByFoodScoreDesc(storeName);
 		for (Store item : storeList) {
-			score += item.getFoodScore();
+			score += item.getFoodScore() / storeList.size();
+			String str = String.valueOf(score);
+			String newstr = str.substring(0, 3);
+			float saveScore = Float.parseFloat(newstr);
+			FoodMap foodmap = foodmapOp.get();
+			foodmap.setScore(saveScore);
+			foodmap = foodMapDao.save(foodmap);
 		}
-		score = (score / storeList.size());
-		FoodMap foodmap = foodmapOp.get();
-		foodmap.setScore(score);
-		foodmap = foodMapDao.save(foodmap);
 		return new FoodMapRes(FoodMapRtnCode.SUCCESSFUL.getMessage());
 	}
 
 	@Override
-	public FoodMapRes getCity(String city) {
-		List<FoodMap> foodMapList = foodMapDao.findAllByCity(city);
-		List<Store> store = new ArrayList<>();
-		for (FoodMap foodmap : foodMapList) {
-			store.addAll(storeDao.findAllByStoreName(foodmap.getName()));
+	public FoodMapRes getCity(String city, int serch) {
+		List<FoodMap> foodMapList = foodMapDao.findAllByCityOrderByScoreDesc(city);
+		if (foodMapList.size() == 0 || serch < 0) {
+			return null;
 		}
-		return new FoodMapRes(foodMapList, store, FoodMapRtnCode.SUCCESSFUL.getMessage());
-	}
-
-	@Override
-	public FoodMapRes getStoreScore(float score) {//陪ボ掸计
-		List<FoodMap> foodMapList = foodMapDao.findTop3ByScoreGreaterThanEqualOrderByScoreDesc(score);
-		List<Store> store = new ArrayList<>();
+		List<String> list = new ArrayList<>();
 		for (FoodMap foodmap : foodMapList) {
-			if (foodmap.getScore() >= score) {
-				store.addAll(
-						storeDao.findByStoreNameAndFoodScoreGreaterThanEqual(foodmap.getName(), foodmap.getScore()));
+			List<Store> storeList = storeDao.findAllByStoreNameOrderByFoodScoreDesc(foodmap.getName());
+			for (Store store : storeList) {
+				if (foodmap.getName().equals(store.getStoreName())) {
+					list.add("┍產: " + foodmap.getName() + ", ┍產蝶基: " + foodmap.getScore() + ", : " + store.getStoreFood() + ", 基: "
+							+ store.getFoodPrice() + ", 蝶基: " + store.getFoodScore());
+				}
 			}
 		}
-		return new FoodMapRes(foodMapList, store, FoodMapRtnCode.SUCCESSFUL.getMessage());
+		if (serch >= list.size() || serch == 0) {
+			return new FoodMapRes(list);
+		}
+		List<String> str = list.subList(0, serch);
+		return new FoodMapRes(str, FoodMapRtnCode.SUCCESSFUL.getMessage());
 	}
 
 	@Override
-	public FoodMapRes getScoreAndFoodScore(float score, int foodScore) {
-		List<FoodMap> foodMapList = foodMapDao.findByScoreGreaterThanEqualOrderByScoreDesc(score);
-		List<Store> store = new ArrayList<>();
-		for (FoodMap foodmap : foodMapList) {
-				store.addAll(
-						storeDao.findByStoreNameAndFoodScoreGreaterThanEqualOrderByFoodScoreDesc(foodmap.getName(),foodScore));
+	public FoodMapRes getStoreScore(Integer score) {// 陪ボ掸计
+		if(score==null) {
+			return null;
 		}
-		return new FoodMapRes(foodMapList, store, FoodMapRtnCode.SUCCESSFUL.getMessage());
+		List<FoodMap> foodMapList = foodMapDao.findByScoreGreaterThanEqualOrderByScoreDesc(score);
+		List<String> list = new ArrayList<>();
+		for (FoodMap foodmap : foodMapList) {
+			List<Store> storeList = storeDao.findAllByStoreNameOrderByFoodScoreDesc(foodmap.getName());
+			for (Store store : storeList) {
+				if (foodmap.getName().equals(store.getStoreName())) {
+					list.add("┍產: " + foodmap.getName() + ", ┍產蝶基: " + foodmap.getScore() + ", : "
+							+ store.getStoreFood() + ", 基: " + store.getFoodPrice() + ", 蝶基: " + store.getFoodScore());
+				}
+			}
+		}
+		return new FoodMapRes(list, FoodMapRtnCode.SUCCESSFUL.getMessage());
+	}
+
+	@Override
+	public FoodMapRes getScoreAndFoodScore(Integer score, Integer foodScore) {
+		if(score==null || foodScore == null) {
+			return null;
+		}
+		List<FoodMap> foodMapList = foodMapDao.findByScoreGreaterThanEqualOrderByScoreDesc(score);
+		List<String> list = new ArrayList<>();
+		for (FoodMap foodmap : foodMapList) {
+			List<Store> storeList = storeDao.findByStoreNameAndFoodScoreGreaterThanEqualOrderByFoodScoreDesc(foodmap.getName(),foodScore);
+			for (Store store : storeList) {
+				if (foodmap.getName().equals(store.getStoreName())) {
+					list.add("┍產: " + foodmap.getName() + ", ┍產蝶基: " + foodmap.getScore() +", : " + store.getStoreFood() + ", 基: "
+							+ store.getFoodPrice() + ", 蝶基: " + store.getFoodScore());
+				}
+			}
+		}
+		return new FoodMapRes(list, FoodMapRtnCode.SUCCESSFUL.getMessage());
 	}
 
 }
