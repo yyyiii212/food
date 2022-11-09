@@ -11,7 +11,7 @@ public class FoodMapReq {
 	
 	private Integer score;
 	
-	private int serch;
+	private int search;
 	
 	@JsonProperty("store_name")
 	private String storeName;
@@ -85,13 +85,12 @@ public class FoodMapReq {
 		this.foodScore = foodScore;
 	}
 
-	public int getSerch() {
-		return serch;
+	public int getSearch() {
+		return search;
 	}
 
-	public void setSerch(int serch) {
-		this.serch = serch;
+	public void setSearch(int search) {
+		this.search = search;
 	}
-	
 	
 }

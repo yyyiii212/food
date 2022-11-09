@@ -5,16 +5,23 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.example.food.entity.FoodNameId;
 import com.example.food.entity.FoodMap;
 
 @Repository
-public interface FoodMapDao extends JpaRepository<FoodMap,String>{
-	public FoodMap findByCity(String city);
-
-	public List<FoodMap> findAllByCityOrderByScoreDesc(String city);
+public interface FoodMapDao extends JpaRepository<FoodMap,FoodNameId>{
+	public FoodMap findByStoreNameAndStoreFood(String sotreName,String storeFood);
 	
-	public List<FoodMap> findByScoreGreaterThanEqualOrderByScoreDesc(float score);
-
-	public List<FoodMap> findByScoreGreaterThanEqualOrderByScoreDesc(double score);
+	public List<FoodMap> findAllByStoreName(String storeName);
+	
+	public List<FoodMap> findAllByStoreNameOrderByFoodScoreDesc(String storeName);
+	
+	public List<FoodMap> findByStoreName(String storeName);
+	
+	public List<FoodMap> findByStoreNameAndFoodScoreGreaterThanEqualOrderByFoodScoreDesc(String storeName,int foodScore);
+		
+	public List<FoodMap> findByStoreNameAndFoodScoreGreaterThanEqual(String storeName,float foodScore);
+	
+	public List<FoodMap> findByStoreNameInAndFoodScoreGreaterThanEqualOrderByFoodScoreDesc(List<String> storeNameList, int foodScore);
 
 }
