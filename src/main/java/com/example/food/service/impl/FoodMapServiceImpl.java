@@ -25,106 +25,101 @@ public class FoodMapServiceImpl implements FoodMapService {
 	private FoodMapDao foodMapDao;
 
 	@Override
-	public FoodMapRes increaseStore(String city, String name) {
-		Store store = new Store(city, name);
-		Optional<Store> storeOp = storeDao.findById(name);
-		if (storeOp.isPresent()) {
+	public FoodMapRes increaseStore(String city, String name) {// 新增
+		Store store = new Store(city, name);//新增Store物件，放輸入的資訊
+		Optional<Store> storeOp = storeDao.findById(name);//找DB看有無重複
+		if (storeOp.isPresent()) {//如果DB有資料就回傳訊息
 			return new FoodMapRes(store, FoodMapRtnCode.NAME_EXISTED.getMessage());
 		}
-		storeDao.save(store);
+		storeDao.save(store);//如果DB沒有就save
 		return new FoodMapRes(store, FoodMapRtnCode.SUCCESSFUL.getMessage());
 	}
 
 	@Override
 	public FoodMapRes increaseFoodMap(String storeName, String storeFood, Integer foodPrice, int foodScore) {
 		FoodMap foodMap = new FoodMap(storeName, storeFood, foodPrice, foodScore);
-		FoodNameId foodnameId = new FoodNameId(storeName, storeFood);
-		Optional<FoodMap> foodMapOp = foodMapDao.findById(foodnameId);
-		if (foodMapOp.isPresent()) {
+		FoodNameId foodNameId = new FoodNameId(storeName, storeFood);//因為DB是雙PK
+		Optional<FoodMap> foodMapOp = foodMapDao.findById(foodNameId);//所以找ID要2個PK
+		if (foodMapOp.isPresent()) {//如果DB有資料就回傳訊息
 			return new FoodMapRes(FoodMapRtnCode.STORE_FOOD_EXISTED.getMessage());
 		}
-		foodMapDao.save(foodMap);
+		foodMapDao.save(foodMap);//因為要計算平均值所以先save
 		float score = 0;
 		Optional<Store> storeOp = storeDao.findById(storeName);
 		List<FoodMap> foodMapList = foodMapDao.findAllByStoreName(storeName);
-		for (FoodMap item : foodMapList) {
+		for (FoodMap item : foodMapList) {// 計算餐點評價平均值
 			score += item.getFoodScore();
-			
 		}
-		scaleScoreAndSave(score, storeOp.get(), foodMapList.size());
+		scaleScoreAndSave(score, storeOp.get(), foodMapList.size());// save給DB(Store)
 		return new FoodMapRes(foodMap, FoodMapRtnCode.SUCCESSFUL.getMessage());
+	}
+	
+	// 取評價平均值至小數點後一位，然後save給Store
+	private Store scaleScoreAndSave(float score, Store store, int foodMapListSize) {
+		score = score / foodMapListSize;//計算平均
+		// Math.floor(是double型態要轉成float)無條件捨去小數點後幾位(10就是小數點後一位)
+		store.setScore((float) Math.floor((score * 10.0) / 10.0));
+		return storeDao.save(store);
 	}
 
 	@Override
-	public Store updateStore(String name, String city) {
+	public Store updateStore(String name, String city) {// 修改
 		Optional<Store> storeOp = storeDao.findById(name);
-		if (!storeOp.isPresent()) {
+		if (!storeOp.isPresent()) {//如果DB沒資料就回傳null
 			return null;
 		}
-		Store store = storeOp.get();
-		store.setCity(city);
-		storeDao.save(store);
+		Store store = storeOp.get();//因為找PK是單一物件，所以要用.get()
+		store.setCity(city);//修改資料
+		storeDao.save(store);//再save
 		return store;
 	}
 
 	@Override
 	public FoodMap updateFoodMap(String storeName, String storeFood, Integer foodPrice, int foodScore) {
-		FoodNameId foodnameId = new FoodNameId(storeName, storeFood);
-		Optional<FoodMap> foodMapOp = foodMapDao.findById(foodnameId);
+		FoodNameId foodNameId = new FoodNameId(storeName, storeFood);
+		Optional<FoodMap> foodMapOp = foodMapDao.findById(foodNameId);
 		if (!foodMapOp.isPresent()) {
 			return null;
 		}
 		FoodMap foodMap = foodMapOp.get();
 		foodMap.setFoodPrice(foodPrice);
 		foodMap.setFoodScore(foodScore);
-		foodMapDao.save(foodMap);
+		foodMapDao.save(foodMap);//因為要計算平均值所以先save
 		float score = 0;
 		Optional<Store> storeOp = storeDao.findById(storeName);
 		List<FoodMap> foodMapList = foodMapDao.findAllByStoreName(storeName);
 		for (FoodMap item : foodMapList) {
 			score += item.getFoodScore();
-			
 		}
 		scaleScoreAndSave(score, storeOp.get(), foodMapList.size());
 		return foodMap;
 
 	}
-	
-	private Store scaleScoreAndSave(float score, Store store, int foodMapListSize) {
-		score = score / foodMapListSize;
-//		String str = String.valueOf(score);
-//		String newstr = str.substring(0, 3);
-//		float saveScore = Float.parseFloat(newstr);
-//		Math.floor((score * 10.0) / 10.0); //無條件捨去小數點後幾位
-		store.setScore((float)Math.floor((score * 10.0) / 10.0));//math.floor是double型態要轉成float
-		return storeDao.save(store);
-	}
 
 	@Override
-	public FoodMapRes deleteStore(String name) {
-		Optional<Store> storeOp = storeDao.findById(name);
-		if (storeOp.isPresent()) {
+	public FoodMapRes deleteStore(String name) {// 刪除
+		Optional<Store> storeOp = storeDao.findById(name);//尋找ID(PK)
+		if (storeOp.isPresent()) {//DB有資料就刪除並回傳訊息
 			storeDao.deleteById(name);
-		}else {
-			return null;
+			return new FoodMapRes(FoodMapRtnCode.SUCCESSFUL.getMessage());
 		}
-		return new FoodMapRes(FoodMapRtnCode.SUCCESSFUL.getMessage());
+		return null;//DB沒有資料就回傳Null
 	}
 
 	@Override
 	public FoodMapRes deleteFoodMap(String storeName, String storeFood) {
-		FoodNameId foodnameId = new FoodNameId(storeName, storeFood);
-		Optional<FoodMap> foodMapOp = foodMapDao.findById(foodnameId);
-		if (foodMapOp.isPresent()) {
-			foodMapDao.deleteById(foodnameId);
-		}else {
-			return null;
+		FoodNameId foodNameId = new FoodNameId(storeName, storeFood);
+		Optional<FoodMap> foodMapOp = foodMapDao.findById(foodNameId);
+		if (foodMapOp.isPresent()) {//DB有資料就刪除
+			foodMapDao.deleteById(foodNameId);
+		} else {
+			return null;//DB沒有資料就回傳Null
 		}
 		float score = 0;
 		Optional<Store> storeOp = storeDao.findById(storeName);
 		List<FoodMap> foodMapList = foodMapDao.findAllByStoreNameOrderByFoodScoreDesc(storeName);
-		for (FoodMap item : foodMapList) {
-			score += item.getFoodScore() / foodMapList.size();
+		for (FoodMap item : foodMapList) {// 計算餐點評價平均值
+			score += item.getFoodScore();
 		}
 		scaleScoreAndSave(score, storeOp.get(), foodMapList.size());
 		return new FoodMapRes(FoodMapRtnCode.SUCCESSFUL.getMessage());
@@ -132,41 +127,36 @@ public class FoodMapServiceImpl implements FoodMapService {
 
 	@Override
 	public FoodMapRes getCity(String city, int search) {
-		if(search < 0) {
+		if (search < 0) {//如果search小於0就回傳null(防呆)
 			return null;
 		}
-		List<Store> storeList = storeDao.findAllByCityOrderByScoreDesc(city);
-		if (storeList.isEmpty()) {
+		List<Store> storeList = storeDao.findAllByCityOrderByScoreDesc(city);//找出城市並依照評價排序
+		if (storeList.isEmpty()) {//如果storeList沒東西就回傳null
 			return null;
-		}		
-//		List<String> list = new ArrayList<>(); // 原本寫1個list讓他add String後得到要輸出的資訊
-		List<StoreVo> storeVoList = new ArrayList<>();//後來新建1個StoreVo，用storeVoList去讓資料庫輸出資訊
-		for (Store store : storeList) {//對storeList做foreach抓出找到的每個name
+		}
+		List<StoreVo> storeVoList = new ArrayList<>();// 新建1個StoreVo，用storeVoList去讓DB輸出資訊
+		for (Store store : storeList) {// 對storeList做foreach抓出找到的每個name
+			//找出餐廳名稱並依照餐點評價排序
 			List<FoodMap> foodMapList = foodMapDao.findAllByStoreNameOrderByFoodScoreDesc(store.getName());
-			StoreVo storeVo = new StoreVo(store.getName(), store.getScore(), foodMapList);//新增物件存放要輸出的資訊
-			storeVoList.add(storeVo);//再把新增的物件放進List裡
-			
-//			for (FoodMap foodMap : foodMapList) {
-//				if (store.getName().equals(foodMap.getStoreName())) {
-//					list.add("店家: " + store.getName() + ", 店家評價: " + store.getScore() + ", 食物: " + foodMap.getStoreFood() + ", 價格: "
-//							+ foodMap.getFoodPrice() + ", 評價: " + foodMap.getFoodScore());
-//				}
-//			}
+			StoreVo storeVo = new StoreVo(store.getName(), store.getScore(), foodMapList);// 新增物件存放要輸出的資訊
+			storeVoList.add(storeVo);// 再把新增的物件放進List裡
 		}
-		if (search >= storeVoList.size() || search == 0) {//search如果大於list長度或等於0就回傳整個list
+		if (search >= storeVoList.size() || search == 0) {// search如果大於list長度或等於0就回傳整個storeVoList
 			return new FoodMapRes(storeVoList);
 		}
-		List<StoreVo> str = storeVoList.subList(0, search);//輸入筆數後顯示資訊
+		List<StoreVo> str = storeVoList.subList(0, search);// 輸入search(筆數)後顯示資訊
 		return new FoodMapRes(str, FoodMapRtnCode.SUCCESSFUL.getMessage());
 	}
 
 	@Override
 	public FoodMapRes getStoreScore(Integer score) {
-		if(score==null) {
+		if (score == null) {//如果score是null就回傳null
 			return null;
 		}
+		//尋找餐廳評價大於(等於)輸入的數字
 		List<Store> storeList = storeDao.findByScoreGreaterThanEqualOrderByScoreDesc(score);
 		List<StoreVo> storeVoList = new ArrayList<>();
+		//尋找餐廳名字(依照餐點評價排序)
 		for (Store store : storeList) {
 			List<FoodMap> foodMapList = foodMapDao.findAllByStoreNameOrderByFoodScoreDesc(store.getName());
 			StoreVo storeVo = new StoreVo(store.getName(), store.getScore(), foodMapList);
@@ -177,24 +167,19 @@ public class FoodMapServiceImpl implements FoodMapService {
 
 	@Override
 	public FoodMapRes getScoreAndFoodScore(Integer score, Integer foodScore) {
-		if(score==null || foodScore == null) {
+		if (score == null || foodScore == null) {
 			return null;
 		}
+		//尋找餐廳評價大於(等於)輸入的數字，然後依照餐廳評價排序
 		List<Store> storeList = storeDao.findByScoreGreaterThanEqualOrderByScoreDesc(score);
 		List<String> nameList = new ArrayList<>();
-		for (Store store : storeList) {//撈資料庫裡的name然後放進nameList
+		for (Store store : storeList) {// 撈資料庫裡的name然後放進nameList
 			nameList.add(store.getName());
 		}
-		
-		//foodMapList找尋name(list型態)然後依照評價排序
-		List<FoodMap> foodMapList = foodMapDao.findByStoreNameInAndFoodScoreGreaterThanEqualOrderByFoodScoreDesc(nameList,foodScore);
-
-//		for (Store store : storeList) {
-//			List<FoodMap> foodMapList = foodMapDao.findByStoreNameAndFoodScoreGreaterThanEqualOrderByFoodScoreDesc(store.getName(),foodScore);
-//			StoreVo storeVo = new StoreVo(store.getName(), store.getScore(), foodMapList);
-//			storeVoList.add(storeVo);
-//		}
-		FoodMapRes res= new FoodMapRes(); 
+		// foodMapList找尋name(list型態)以及餐點評價，然後依照餐點評價排序
+		List<FoodMap> foodMapList = foodMapDao
+				.findByStoreNameInAndFoodScoreGreaterThanEqualOrderByFoodScoreDesc(nameList, foodScore);
+		FoodMapRes res = new FoodMapRes();
 		res.setFoodMapList(foodMapList);
 		res.setMessage(FoodMapRtnCode.SUCCESSFUL.getMessage());
 		return res;

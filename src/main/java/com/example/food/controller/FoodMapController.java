@@ -19,7 +19,7 @@ public class FoodMapController {
 	private FoodMapService foodMapService;
 
 	public FoodMapRes checkParam(FoodMapReq req) {
-		if (!StringUtils.hasText(req.getStoreFood())) {
+		if (!StringUtils.hasText(req.getStoreFood())) {//耞Τ礚块
 			return new FoodMapRes(FoodMapRtnCode.STORE_FOOD_REQUIRED.getMessage());
 		} else if (!StringUtils.hasText(req.getStoreName())) {
 			return new FoodMapRes(FoodMapRtnCode.STORE_NAME_REQUIRED.getMessage());
@@ -28,7 +28,7 @@ public class FoodMapController {
 	}
 
 	public FoodMapRes checkParamFoodMap(FoodMapReq req) {
-		if (!StringUtils.hasText(req.getCity())) {
+		if (!StringUtils.hasText(req.getCity())) {//耞Τ礚块
 			return new FoodMapRes(FoodMapRtnCode.CITY_REQUIRED.getMessage());
 		} else if (!StringUtils.hasText(req.getName())) {
 			return new FoodMapRes(FoodMapRtnCode.NAME_REQUIRED.getMessage());
@@ -67,8 +67,8 @@ public class FoodMapController {
 		if (check != null) {
 			return check;
 		}
-		Store Store = foodMapService.updateStore(req.getName(),req.getCity());
-		if(Store == null) {
+		Store Store = foodMapService.updateStore(req.getName(), req.getCity());
+		if (Store == null) {
 			return new FoodMapRes(FoodMapRtnCode.ERROR.getMessage());
 		}
 		return new FoodMapRes(Store, FoodMapRtnCode.SUCCESSFUL.getMessage());
@@ -87,7 +87,7 @@ public class FoodMapController {
 		}
 		FoodMap foodMap = foodMapService.updateFoodMap(req.getStoreName(), req.getStoreFood(), req.getFoodPrice(),
 				req.getFoodScore());
-		if(foodMap == null) {
+		if (foodMap == null) {
 			return new FoodMapRes(FoodMapRtnCode.ERROR.getMessage());
 		}
 		return new FoodMapRes(foodMap, FoodMapRtnCode.SUCCESSFUL.getMessage());
@@ -99,7 +99,7 @@ public class FoodMapController {
 			return new FoodMapRes(FoodMapRtnCode.NAME_REQUIRED.getMessage());
 		}
 		FoodMapRes res = foodMapService.deleteStore(req.getName());
-		if(res == null) {
+		if (res == null) {
 			return new FoodMapRes(FoodMapRtnCode.ERROR.getMessage());
 		}
 		return new FoodMapRes(res, FoodMapRtnCode.SUCCESSFUL.getMessage());
@@ -112,7 +112,7 @@ public class FoodMapController {
 			return check;
 		}
 		FoodMapRes res = foodMapService.deleteFoodMap(req.getStoreName(), req.getStoreFood());
-		if(res == null) {
+		if (res == null) {
 			return new FoodMapRes(FoodMapRtnCode.ERROR.getMessage());
 		}
 		return new FoodMapRes(res, FoodMapRtnCode.SUCCESSFUL.getMessage());
@@ -120,11 +120,11 @@ public class FoodMapController {
 
 	@PostMapping(value = "/api/searchCity")
 	public FoodMapRes getCity(@RequestBody FoodMapReq req) {
-		FoodMapRes res = foodMapService.getCity(req.getCity(),req.getSearch());
-		if (!StringUtils.hasText(req.getCity())) {
+		FoodMapRes res = foodMapService.getCity(req.getCity(), req.getSearch());
+		if (!StringUtils.hasText(req.getCity())) {//耞Τ礚块
 			return new FoodMapRes(FoodMapRtnCode.CITY_REQUIRED.getMessage());
-		}else if (req.getSearch() < 0) {
-			return new FoodMapRes(FoodMapRtnCode.SERCH_REQUIRED.getMessage());
+		} else if (req.getSearch() < 0) {// 狦块计0
+			return new FoodMapRes(FoodMapRtnCode.SERCH_REQUIRED.getMessage());// 肚searchぃ才璶―
 		}
 		return res;
 	}
@@ -132,8 +132,8 @@ public class FoodMapController {
 	@PostMapping(value = "/api/searchStoreScore")
 	public FoodMapRes getStoreScore(@RequestBody FoodMapReq req) {
 		FoodMapRes res = foodMapService.getStoreScore(req.getScore());
-		 if (req.getScore() == null || req.getScore() <= 0 || req.getScore() >= 6) {
-			return new FoodMapRes(FoodMapRtnCode.SCORE_REQUIRED.getMessage());
+		if (req.getScore() <= 0 || req.getScore() >= 6) {// 狦块计(单)0┪琌(单)6
+			return new FoodMapRes(FoodMapRtnCode.SCORE_REQUIRED.getMessage());// 肚scoreぃ才璶―
 		}
 		return res;
 	}
@@ -141,9 +141,9 @@ public class FoodMapController {
 	@PostMapping(value = "/api/searchStoreScoreAndFoodScore")
 	public FoodMapRes getScoreAndFoodScore(@RequestBody FoodMapReq req) {
 		FoodMapRes res = foodMapService.getScoreAndFoodScore(req.getScore(), req.getFoodScore());
-		if (req.getScore() == null || req.getScore() <= 0 || req.getScore() >= 6) {
-			return new FoodMapRes(FoodMapRtnCode.SCORE_REQUIRED.getMessage());
-		} else if (req.getFoodScore() == null || req.getFoodScore() <= 0 || req.getFoodScore() >= 6) {
+		if (req.getScore() <= 0 || req.getScore() >= 6) {// 狦块计(单)0┪琌(单)6
+			return new FoodMapRes(FoodMapRtnCode.SCORE_REQUIRED.getMessage());// 肚scoreぃ才璶―
+		} else if (req.getFoodScore() <= 0 || req.getFoodScore() >= 6) {//
 			return new FoodMapRes(FoodMapRtnCode.FOOD_SCORE_REQUIRED.getMessage());
 		}
 		return res;
