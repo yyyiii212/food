@@ -9,12 +9,9 @@ import com.example.food.entity.Store;
 
 @Repository
 public interface StoreDao extends JpaRepository<Store,String>{
-	public Store findByCity(String city);
 
 	public List<Store> findAllByCityOrderByScoreDesc(String city);
 	
 	public List<Store> findByScoreGreaterThanEqualOrderByScoreDesc(float score);
-
-	public List<Store> findByScoreGreaterThanEqualOrderByScoreDesc(double score);
 
 }

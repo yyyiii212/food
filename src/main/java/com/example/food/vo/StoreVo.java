@@ -3,9 +3,10 @@ package com.example.food.vo;
 import java.util.List;
 
 import com.example.food.entity.FoodMap;
-import com.example.food.entity.Store;
 
 public class StoreVo {
+	private String city;
+	
 	private String name;
 	
 	private float score;
@@ -16,7 +17,8 @@ public class StoreVo {
 		
 	}
 	
-    public StoreVo(String name, float score, List<FoodMap> foodMapList) {
+    public StoreVo(String city, String name, float score, List<FoodMap> foodMapList) {
+    	this.city = city;
 		this.foodMapList = foodMapList;
 		this.name =name;
 		this.score =score;
@@ -45,6 +47,14 @@ public class StoreVo {
 
 	public void setFoodMapList(List<FoodMap> foodMapList) {
 		this.foodMapList = foodMapList;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 
 	

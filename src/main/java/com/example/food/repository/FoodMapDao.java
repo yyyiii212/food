@@ -16,12 +16,6 @@ public interface FoodMapDao extends JpaRepository<FoodMap,FoodNameId>{
 	
 	public List<FoodMap> findAllByStoreNameOrderByFoodScoreDesc(String storeName);
 	
-	public List<FoodMap> findByStoreName(String storeName);
-	
-	public List<FoodMap> findByStoreNameAndFoodScoreGreaterThanEqualOrderByFoodScoreDesc(String storeName,int foodScore);
-		
-	public List<FoodMap> findByStoreNameAndFoodScoreGreaterThanEqual(String storeName,float foodScore);
-	
 	public List<FoodMap> findByStoreNameInAndFoodScoreGreaterThanEqualOrderByFoodScoreDesc(List<String> storeNameList, int foodScore);
 
 }

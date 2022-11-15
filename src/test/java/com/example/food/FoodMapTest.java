@@ -81,7 +81,7 @@ public class FoodMapTest {
 		Integer search = 3;
 		Assert.isTrue(city != null, "City cannot be null !!");
 		Assert.isTrue(search < 6 && search > 0 && search != null, "Search cannot be null !!");
-		FoodMapRes res = foodMapService.getCity(city, search);
+		FoodMapRes res = foodMapService.searchCity(city, search);
 		if (search == 0 || search == null) {
 			System.out.println(res.getStoreVoList());
 			return;
@@ -93,7 +93,7 @@ public class FoodMapTest {
 	public void getStoreScoreTest() {
 		Integer score = 3;
 		Assert.isTrue(score < 6 && score > 0 && score != null, "Score cannot be null !!");
-		FoodMapRes res = foodMapService.getStoreScore(score);
+		FoodMapRes res = foodMapService.searchStoreScore(score);
 		System.out.println(res.getStoreVoList());
 	}
 
@@ -103,7 +103,7 @@ public class FoodMapTest {
 		Integer foodScore = 3;
 		Assert.isTrue(score < 6 && score > 0 && score != null, "Score cannot be null !!");
 		Assert.isTrue(foodScore < 6 && foodScore > 0 && foodScore != null, "FoodScore cannot be null !!");
-		FoodMapRes res = foodMapService.getScoreAndFoodScore(score, foodScore);
+		FoodMapRes res = foodMapService.searchStoreScoreAndFoodScore(score, foodScore);
 		res.setMessage(FoodMapRtnCode.SUCCESSFUL.getMessage());
 		System.out.println(res.getFoodMapList()+""+res.getMessage());
 	}
